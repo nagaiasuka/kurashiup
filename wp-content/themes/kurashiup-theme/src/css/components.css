@@ -1,0 +1,15 @@
+@layer components {
+
+    .btn-primary{
+        @apply rounded-xl bg-stone-900 px-6 py-3 text-white hover:bg-stone-700;
+    }
+
+    .btn-secondary{
+        @apply rounded-xl border border-stone-300 px-6 py-3 hover:bg-stone-100;
+    }
+
+    .card{
+        @apply rounded-2xl bg-white shadow-sm;
+    }
+
+}
