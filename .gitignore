@@ -20,3 +20,5 @@ node_modules/
 *.log
 .vscode/
 .idea/
+node_modules/
+wp-content/themes/kurashiup-theme/node_modules/
