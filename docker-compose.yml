@@ -1,0 +1,41 @@
+services:
+  wordpress:
+    image: wordpress:php8.3-apache
+    container_name: kurashiup_wp
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: kurashiup
+      WORDPRESS_DB_USER: kurashiup_user
+      WORDPRESS_DB_PASSWORD: kurashiup_password
+    volumes:
+      - ./wp-content:/var/www/html/wp-content
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: kurashiup_db
+    environment:
+      MYSQL_DATABASE: kurashiup
+      MYSQL_USER: kurashiup_user
+      MYSQL_PASSWORD: kurashiup_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: kurashiup_phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: kurashiup_user
+      PMA_PASSWORD: kurashiup_password
+    depends_on:
+      - db
+
+volumes:
+  db_data:

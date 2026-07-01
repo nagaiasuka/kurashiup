@@ -1,0 +1,6 @@
+wp-content/uploads/
+.env
+.DS_Store
+*.log
+.vscode/
+.idea/
