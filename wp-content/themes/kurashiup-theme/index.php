@@ -1,31 +1,33 @@
 <?php get_header(); ?>
 
 <main class="section">
+
     <div class="container-ku">
 
-        <div class="card p-10">
+        <?php if (have_posts()) : ?>
 
-            <h1 class="text-5xl text-balance">
-                KurashiUp
-            </h1>
+            <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
 
-            <p class="mt-4 text-lg text-stone-600">
-                暮らしを少し上げるメディア。
-            </p>
+                <?php while (have_posts()) : the_post(); ?>
 
-            <div class="mt-8 flex gap-4">
-                <button class="btn-primary">
-                    記事を見る
-                </button>
+                    <?php get_template_part(
+                        'template-parts/components/article-card'
+                    ); ?>
 
-                <button class="btn-secondary">
-                    カテゴリー
-                </button>
+                <?php endwhile; ?>
+
             </div>
 
-        </div>
+        <?php else : ?>
+
+            <p class="text-center text-stone-500">
+                記事がありません。
+            </p>
+
+        <?php endif; ?>
 
     </div>
+
 </main>
 
 <?php get_footer(); ?>

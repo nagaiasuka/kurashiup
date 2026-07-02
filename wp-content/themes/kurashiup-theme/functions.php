@@ -30,3 +30,5 @@ function kurashiup_enqueue_assets() {
     );
 }
 add_action('wp_enqueue_scripts', 'kurashiup_enqueue_assets');
+
+require_once get_template_directory() . '/inc/post-types.php';
