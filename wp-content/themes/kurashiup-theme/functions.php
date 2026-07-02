@@ -93,6 +93,80 @@ function kurashiup_redirect_to_amazon()
     wp_redirect(esc_url_raw($amazon_url), 302, 'KurashiUp');
     exit;
 }
+
+/**
+ * 商品のみ検索対象にする
+ */
+function kurashiup_search_products_only($query)
+{
+    if (
+        ! is_admin()
+        && $query->is_main_query()
+        && $query->is_search()
+    ) {
+        $query->set('post_type', 'product');
+    }
+}
+
+/**
+ * 商品説明・ブランドも検索対象に含める
+ */
+function kurashiup_search_join($join)
+{
+    global $wpdb;
+
+    if (is_search() && !is_admin()) {
+        $join .= " LEFT JOIN {$wpdb->term_relationships} tr ON {$wpdb->posts}.ID = tr.object_id";
+        $join .= " LEFT JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id";
+        $join .= " LEFT JOIN {$wpdb->terms} t ON tt.term_id = t.term_id";
+        $join .= " LEFT JOIN {$wpdb->postmeta} pm ON {$wpdb->posts}.ID = pm.post_id";
+    }
+
+    return $join;
+}
+add_filter('posts_join', 'kurashiup_search_join');
+
+function kurashiup_search_where($where)
+{
+    global $wpdb;
+
+    if (is_search() && !is_admin()) {
+
+        $keyword = get_search_query();
+
+        if ($keyword) {
+
+            $like = '%' . $wpdb->esc_like($keyword) . '%';
+
+            $where .= $wpdb->prepare(
+                " OR (
+                    t.name LIKE %s
+                    OR (
+                        pm.meta_key = '_short_description'
+                        AND pm.meta_value LIKE %s
+                    )
+                )",
+                $like,
+                $like
+            );
+        }
+    }
+
+    return $where;
+}
+add_filter('posts_where', 'kurashiup_search_where');
+
+function kurashiup_search_distinct($distinct)
+{
+    if (is_search() && !is_admin()) {
+        return "DISTINCT";
+    }
+
+    return $distinct;
+}
+add_filter('posts_distinct', 'kurashiup_search_distinct');
+add_action('pre_get_posts', 'kurashiup_search_products_only');
+
 add_action('admin_post_kurashiup_redirect_to_amazon', 'kurashiup_redirect_to_amazon');
 add_action('admin_post_nopriv_kurashiup_redirect_to_amazon', 'kurashiup_redirect_to_amazon');
 

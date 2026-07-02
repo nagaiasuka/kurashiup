@@ -27,6 +27,6 @@ $is_front = is_front_page();
             <a href="<?php echo esc_url($is_front ? '#popular-ranking' : home_url('/#popular-ranking')); ?>" class="text-white/70 transition hover:text-white">Ranking</a>
             <a href="<?php echo esc_url($is_front ? '#about' : home_url('/#about')); ?>" class="text-white/70 transition hover:text-white">About</a>
         </nav>
-
+        <?php get_search_form(); ?>
     </div>
 </header>
