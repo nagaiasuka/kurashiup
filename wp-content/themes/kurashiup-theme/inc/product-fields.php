@@ -19,6 +19,7 @@ function kurashiup_product_fields_callback($post)
     $asin = get_post_meta($post->ID, '_kurashiup_asin', true);
     $reference_price = get_post_meta($post->ID, '_kurashiup_reference_price', true);
     $short_description = get_post_meta($post->ID, '_kurashiup_short_description', true);
+    $amazon_click_count = (int) get_post_meta($post->ID, '_kurashiup_amazon_click_count', true);
 
     wp_nonce_field('kurashiup_save_product_fields', 'kurashiup_product_fields_nonce');
     ?>
@@ -41,6 +42,11 @@ function kurashiup_product_fields_callback($post)
     <p>
         <label for="kurashiup_short_description">短い説明</label><br>
         <textarea id="kurashiup_short_description" name="kurashiup_short_description" rows="5" style="width:100%;"><?php echo esc_textarea($short_description); ?></textarea>
+    </p>
+
+    <p>
+        <strong>Amazonクリック数</strong><br>
+        <span><?php echo esc_html(number_format_i18n($amazon_click_count)); ?></span>
     </p>
 
     <?php

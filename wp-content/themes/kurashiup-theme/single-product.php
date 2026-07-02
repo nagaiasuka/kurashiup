@@ -6,6 +6,12 @@ $brand_name = ! empty($brands) && ! is_wp_error($brands) ? $brands[0]->name : ''
 
 $amazon_url = get_post_meta(get_the_ID(), '_kurashiup_amazon_url', true);
 $short_description = get_post_meta(get_the_ID(), '_kurashiup_short_description', true);
+$amazon_redirect_url = $amazon_url
+    ? wp_nonce_url(
+        admin_url('admin-post.php?action=kurashiup_redirect_to_amazon&product_id=' . get_the_ID()),
+        'kurashiup_amazon_redirect_' . get_the_ID()
+    )
+    : '';
 ?>
 
 <main class="section">
@@ -65,7 +71,7 @@ $short_description = get_post_meta(get_the_ID(), '_kurashiup_short_description',
 
                         <?php if ($amazon_url) : ?>
                             <a
-                                href="<?php echo esc_url($amazon_url); ?>"
+                                href="<?php echo esc_url($amazon_redirect_url); ?>"
                                 target="_blank"
                                 rel="noopener sponsored"
                                 class="mt-8 inline-flex w-full items-center justify-center rounded-full bg-stone-900 px-8 py-4 text-sm font-semibold text-white transition hover:bg-stone-700 sm:w-auto"
