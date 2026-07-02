@@ -22,13 +22,12 @@ function kurashiup_register_product_post_type() {
         'menu_position' => 5,
         'menu_icon' => 'dashicons-cart',
         'rewrite' => [
-            'slug' => 'products',
+            'slug' => 'product',
+            'with_front' => false,
         ],
         'supports' => [
             'title',
-            'editor',
             'thumbnail',
-            'excerpt',
         ],
         'show_in_rest' => true,
     ];
