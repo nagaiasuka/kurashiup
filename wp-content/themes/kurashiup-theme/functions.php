@@ -32,3 +32,5 @@ function kurashiup_enqueue_assets() {
 add_action('wp_enqueue_scripts', 'kurashiup_enqueue_assets');
 
 require_once get_template_directory() . '/inc/post-types.php';
+require_once get_template_directory() . '/inc/product-fields.php';
+require_once get_template_directory() . '/inc/taxonomies.php';
