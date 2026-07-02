@@ -20,6 +20,7 @@ function kurashiup_product_fields_callback($post)
     $reference_price = get_post_meta($post->ID, '_kurashiup_reference_price', true);
     $short_description = get_post_meta($post->ID, '_kurashiup_short_description', true);
     $amazon_click_count = (int) get_post_meta($post->ID, '_kurashiup_amazon_click_count', true);
+    $is_featured = '1' === get_post_meta($post->ID, '_kurashiup_is_featured', true);
 
     wp_nonce_field('kurashiup_save_product_fields', 'kurashiup_product_fields_nonce');
     ?>
@@ -42,6 +43,18 @@ function kurashiup_product_fields_callback($post)
     <p>
         <label for="kurashiup_short_description">短い説明</label><br>
         <textarea id="kurashiup_short_description" name="kurashiup_short_description" rows="5" style="width:100%;"><?php echo esc_textarea($short_description); ?></textarea>
+    </p>
+
+    <p>
+        <label>
+            <input
+                type="checkbox"
+                name="kurashiup_is_featured"
+                value="1"
+                <?php checked($is_featured); ?>
+            >
+            編集部おすすめに表示する
+        </label>
     </p>
 
     <p>
@@ -86,5 +99,11 @@ function kurashiup_save_product_fields($post_id)
             );
         }
     }
+
+    update_post_meta(
+        $post_id,
+        '_kurashiup_is_featured',
+        isset($_POST['kurashiup_is_featured']) ? '1' : '0'
+    );
 }
 add_action('save_post_product', 'kurashiup_save_product_fields');

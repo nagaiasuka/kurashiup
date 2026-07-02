@@ -4,11 +4,16 @@ $featured_products = new WP_Query([
     'posts_per_page' => 4,
     'post_status' => 'publish',
     'no_found_rows' => true,
-    'tax_query' => [
+    'meta_key' => '_kurashiup_is_featured',
+    'orderby' => [
+        'meta_value_num' => 'DESC',
+        'date' => 'DESC',
+    ],
+    'meta_query' => [
         [
-            'taxonomy' => 'product_tag',
-            'field' => 'slug',
-            'terms' => 'featured',
+            'key' => '_kurashiup_is_featured',
+            'value' => '1',
+            'compare' => '=',
         ],
     ],
 ]);
