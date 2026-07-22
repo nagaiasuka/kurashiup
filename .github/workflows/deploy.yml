@@ -1,0 +1,55 @@
+name: Deploy theme to XREA
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: wp-content/themes/kurashiup-theme/package-lock.json
+
+      - name: Install and build
+        working-directory: wp-content/themes/kurashiup-theme
+        run: |
+          npm ci
+          npm run build
+
+      - name: Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Deploy theme by FTPS
+        env:
+          XREA_HOST: ${{ secrets.XREA_HOST }}
+          XREA_USER: ${{ secrets.XREA_USER }}
+          XREA_PASSWORD: ${{ secrets.XREA_PASSWORD }}
+        run: |
+          lftp <<EOF
+          set ftp:ssl-force true
+          set ftp:ssl-protect-data true
+          set ssl:verify-certificate true
+          open -u "${XREA_USER}","${XREA_PASSWORD}" "${XREA_HOST}"
+          mkdir -p /public_html/amocreo.com/wp-content/themes/kurashiup-theme
+          mirror --reverse --delete --verbose \
+            --exclude node_modules/ \
+            --exclude src/ \
+            --exclude package.json \
+            --exclude package-lock.json \
+            --exclude vite.config.js \
+            wp-content/themes/kurashiup-theme/ \
+            /public_html/amocreo.com/wp-content/themes/kurashiup-theme/
+          bye
+          EOF
