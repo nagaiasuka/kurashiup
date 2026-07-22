@@ -1,6 +1,24 @@
+# WordPress generated / managed files
 wp-content/uploads/
+wp-content/languages/
+wp-content/upgrade/
+wp-content/cache/
+
+# Default WordPress themes
+wp-content/themes/twentytwenty*/
+
+# Default plugins
+wp-content/plugins/akismet/
+wp-content/plugins/hello.php
+
+# Node
+node_modules/
+
+# Env / OS / Editor
 .env
 .DS_Store
 *.log
 .vscode/
 .idea/
+node_modules/
+wp-content/themes/kurashiup-theme/node_modules/
