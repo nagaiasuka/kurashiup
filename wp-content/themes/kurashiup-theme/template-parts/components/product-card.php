@@ -3,6 +3,8 @@ $categories = get_the_terms(get_the_ID(), 'product_category');
 $category_name = ! empty($categories) && ! is_wp_error($categories)
     ? $categories[0]->name
     : '';
+$amazon_image_url = get_post_meta(get_the_ID(), '_kurashiup_amazon_image_url', true);
+$thumbnail_url = get_the_post_thumbnail_url(get_the_ID(), 'medium');
 
 $product_url = get_permalink();
 $theme = $args['theme'] ?? 'light';
@@ -37,7 +39,19 @@ $link_classes = $is_dark
     <a href="<?php echo esc_url($product_url); ?>" class="block">
 
         <div class="flex aspect-[4/3] items-center justify-center p-6 <?php echo esc_attr($media_classes); ?>">
-            <?php if (has_post_thumbnail()) : ?>
+            <?php if ($amazon_image_url) : ?>
+                <img
+                    src="<?php echo esc_url($amazon_image_url); ?>"
+                    alt="<?php echo esc_attr(get_the_title()); ?>"
+                    class="max-h-48 w-full object-contain transition duration-700 group-hover:scale-105"
+                    loading="lazy"
+                    referrerpolicy="no-referrer"
+                    onerror="this.onerror=null;<?php if ($thumbnail_url) : ?>this.src='<?php echo esc_js($thumbnail_url); ?>';<?php else : ?>this.style.display='none';if(this.nextElementSibling){this.nextElementSibling.style.display='block';}<?php endif; ?>"
+                >
+                <?php if (! $thumbnail_url) : ?>
+                    <div class="hidden h-full w-full rounded-xl <?php echo esc_attr($placeholder_classes); ?>"></div>
+                <?php endif; ?>
+            <?php elseif (has_post_thumbnail()) : ?>
                 <?php the_post_thumbnail(
                     'medium',
                     [

@@ -51,13 +51,29 @@
                 ?>
 
                 <?php while ($hero_products->have_posts()) : $hero_products->the_post(); ?>
+                    <?php
+                    $amazon_image_url = get_post_meta(get_the_ID(), '_kurashiup_amazon_image_url', true);
+                    $thumbnail_url = get_the_post_thumbnail_url(get_the_ID(), 'medium');
+                    ?>
 
                     <a
                         href="<?php the_permalink(); ?>"
                         class="absolute <?php echo esc_attr($positions[$index] ?? $positions[0]); ?> group animate-float rounded-[2rem] border border-white/10 bg-white/[0.045] p-5 shadow-2xl backdrop-blur-xl transition duration-700 hover:-translate-y-3 hover:bg-white/[0.08]"
                         style="animation-delay: <?php echo esc_attr($index * 0.4); ?>s;"
                     >
-                        <?php if (has_post_thumbnail()) : ?>
+                        <?php if ($amazon_image_url) : ?>
+                            <img
+                                src="<?php echo esc_url($amazon_image_url); ?>"
+                                alt="<?php echo esc_attr(get_the_title()); ?>"
+                                class="h-full w-full object-contain transition duration-700 group-hover:scale-105"
+                                loading="lazy"
+                                referrerpolicy="no-referrer"
+                                onerror="this.onerror=null;<?php if ($thumbnail_url) : ?>this.src='<?php echo esc_js($thumbnail_url); ?>';<?php else : ?>this.style.display='none';if(this.nextElementSibling){this.nextElementSibling.style.display='block';}<?php endif; ?>"
+                            >
+                            <?php if (! $thumbnail_url) : ?>
+                                <div class="hidden h-full w-full rounded-2xl bg-white/10"></div>
+                            <?php endif; ?>
+                        <?php elseif (has_post_thumbnail()) : ?>
                             <?php the_post_thumbnail(
                                 'medium',
                                 [

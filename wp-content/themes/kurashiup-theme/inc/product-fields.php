@@ -16,6 +16,7 @@ add_action('add_meta_boxes', 'kurashiup_add_product_meta_boxes');
 function kurashiup_product_fields_callback($post)
 {
     $amazon_url = get_post_meta($post->ID, '_kurashiup_amazon_url', true);
+    $amazon_image_url = get_post_meta($post->ID, '_kurashiup_amazon_image_url', true);
     $asin = get_post_meta($post->ID, '_kurashiup_asin', true);
     $reference_price = get_post_meta($post->ID, '_kurashiup_reference_price', true);
     $short_description = get_post_meta($post->ID, '_kurashiup_short_description', true);
@@ -28,6 +29,11 @@ function kurashiup_product_fields_callback($post)
     <p>
         <label for="kurashiup_amazon_url">Amazon URL</label><br>
         <input type="url" id="kurashiup_amazon_url" name="kurashiup_amazon_url" value="<?php echo esc_attr($amazon_url); ?>" style="width:100%;">
+    </p>
+
+    <p>
+        <label for="kurashiup_amazon_image_url">Amazon画像URL</label><br>
+        <input type="url" id="kurashiup_amazon_image_url" name="kurashiup_amazon_image_url" value="<?php echo esc_attr($amazon_image_url); ?>" style="width:100%;">
     </p>
 
     <p>
@@ -85,6 +91,7 @@ function kurashiup_save_product_fields($post_id)
 
     $fields = [
         '_kurashiup_amazon_url' => 'kurashiup_amazon_url',
+        '_kurashiup_amazon_image_url' => 'kurashiup_amazon_image_url',
         '_kurashiup_asin' => 'kurashiup_asin',
         '_kurashiup_reference_price' => 'kurashiup_reference_price',
         '_kurashiup_short_description' => 'kurashiup_short_description',
@@ -92,10 +99,18 @@ function kurashiup_save_product_fields($post_id)
 
     foreach ($fields as $meta_key => $field_name) {
         if (isset($_POST[$field_name])) {
+            $value = $_POST[$field_name];
+
+            if (in_array($field_name, ['kurashiup_amazon_url', 'kurashiup_amazon_image_url'], true)) {
+                $value = esc_url_raw($value);
+            } else {
+                $value = sanitize_text_field($value);
+            }
+
             update_post_meta(
                 $post_id,
                 $meta_key,
-                sanitize_text_field($_POST[$field_name])
+                $value
             );
         }
     }

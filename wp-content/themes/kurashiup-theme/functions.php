@@ -173,3 +173,4 @@ add_action('admin_post_nopriv_kurashiup_redirect_to_amazon', 'kurashiup_redirect
 require_once get_template_directory() . '/inc/post-types.php';
 require_once get_template_directory() . '/inc/product-fields.php';
 require_once get_template_directory() . '/inc/taxonomies.php';
+require_once get_template_directory() . '/inc/import-api.php';

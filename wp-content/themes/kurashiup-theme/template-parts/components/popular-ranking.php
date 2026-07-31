@@ -58,6 +58,8 @@ $product_archive_link = get_post_type_archive_link('product');
                     while ($popular_products->have_posts()) :
                         $popular_products->the_post();
                         $click_count = (int) get_post_meta(get_the_ID(), '_kurashiup_amazon_click_count', true);
+                        $amazon_image_url = get_post_meta(get_the_ID(), '_kurashiup_amazon_image_url', true);
+                        $thumbnail_url = get_the_post_thumbnail_url(get_the_ID(), 'medium');
                         $categories = get_the_terms(get_the_ID(), 'product_category');
                         $category_name = ! empty($categories) && ! is_wp_error($categories) ? $categories[0]->name : '';
                     ?>
@@ -69,7 +71,19 @@ $product_archive_link = get_post_type_archive_link('product');
 
                                 <div class="flex w-full items-center gap-4">
                                     <div class="flex items-center justify-center rounded-2xl bg-stone-50 p-5" style="width: 6rem;">
-                                        <?php if (has_post_thumbnail()) : ?>
+                                        <?php if ($amazon_image_url) : ?>
+                                            <img
+                                                src="<?php echo esc_url($amazon_image_url); ?>"
+                                                alt="<?php echo esc_attr(get_the_title()); ?>"
+                                                class="max-h-full w-full object-contain transition duration-700 group-hover:scale-105"
+                                                loading="lazy"
+                                                referrerpolicy="no-referrer"
+                                                onerror="this.onerror=null;<?php if ($thumbnail_url) : ?>this.src='<?php echo esc_js($thumbnail_url); ?>';<?php else : ?>this.style.display='none';if(this.nextElementSibling){this.nextElementSibling.style.display='block';}<?php endif; ?>"
+                                            >
+                                            <?php if (! $thumbnail_url) : ?>
+                                                <div class="hidden h-full w-full rounded-xl bg-stone-100"></div>
+                                            <?php endif; ?>
+                                        <?php elseif (has_post_thumbnail()) : ?>
                                             <?php the_post_thumbnail(
                                                 'medium',
                                                 [
@@ -134,6 +148,8 @@ $product_archive_link = get_post_type_archive_link('product');
                         <?php while ($highlighted_products->have_posts()) : $highlighted_products->the_post(); ?>
                             <?php
                             $highlighted_click_count = (int) get_post_meta(get_the_ID(), '_kurashiup_amazon_click_count', true);
+                            $amazon_image_url = get_post_meta(get_the_ID(), '_kurashiup_amazon_image_url', true);
+                            $thumbnail_url = get_the_post_thumbnail_url(get_the_ID(), 'large');
                             $short_description = get_post_meta(get_the_ID(), '_kurashiup_short_description', true);
                             ?>
                             <div class="relative overflow-hidden rounded-[2rem] bg-[#070B14] p-8 text-white">
@@ -151,7 +167,19 @@ $product_archive_link = get_post_type_archive_link('product');
                                     </p>
 
                                     <div class="mt-8 rounded-3xl bg-white/[0.045] p-6 backdrop-blur-xl">
-                                        <?php if (has_post_thumbnail()) : ?>
+                                        <?php if ($amazon_image_url) : ?>
+                                            <img
+                                                src="<?php echo esc_url($amazon_image_url); ?>"
+                                                alt="<?php echo esc_attr(get_the_title()); ?>"
+                                                class="mx-auto h-48 w-full object-contain"
+                                                loading="lazy"
+                                                referrerpolicy="no-referrer"
+                                                onerror="this.onerror=null;<?php if ($thumbnail_url) : ?>this.src='<?php echo esc_js($thumbnail_url); ?>';<?php else : ?>this.style.display='none';if(this.nextElementSibling){this.nextElementSibling.style.display='block';}<?php endif; ?>"
+                                            >
+                                            <?php if (! $thumbnail_url) : ?>
+                                                <div class="hidden h-48 w-full rounded-2xl bg-white/10"></div>
+                                            <?php endif; ?>
+                                        <?php elseif (has_post_thumbnail()) : ?>
                                             <?php the_post_thumbnail(
                                                 'large',
                                                 [

@@ -5,6 +5,8 @@ $brands = get_the_terms(get_the_ID(), 'product_brand');
 $brand_name = ! empty($brands) && ! is_wp_error($brands) ? $brands[0]->name : '';
 
 $amazon_url = get_post_meta(get_the_ID(), '_kurashiup_amazon_url', true);
+$amazon_image_url = get_post_meta(get_the_ID(), '_kurashiup_amazon_image_url', true);
+$thumbnail_url = get_the_post_thumbnail_url(get_the_ID(), 'large');
 $short_description = get_post_meta(get_the_ID(), '_kurashiup_short_description', true);
 $amazon_redirect_url = $amazon_url
     ? wp_nonce_url(
@@ -35,7 +37,19 @@ $amazon_redirect_url = $amazon_url
                 <div class="grid gap-10 lg:grid-cols-2 lg:items-start">
 
                     <div class="rounded-3xl bg-stone-50 p-8">
-                        <?php if (has_post_thumbnail()) : ?>
+                        <?php if ($amazon_image_url) : ?>
+                            <img
+                                src="<?php echo esc_url($amazon_image_url); ?>"
+                                alt="<?php echo esc_attr(get_the_title()); ?>"
+                                class="mx-auto max-h-[480px] w-full object-contain"
+                                loading="eager"
+                                referrerpolicy="no-referrer"
+                                onerror="this.onerror=null;<?php if ($thumbnail_url) : ?>this.src='<?php echo esc_js($thumbnail_url); ?>';<?php else : ?>this.style.display='none';if(this.nextElementSibling){this.nextElementSibling.style.display='block';}<?php endif; ?>"
+                            >
+                            <?php if (! $thumbnail_url) : ?>
+                                <div class="hidden aspect-square rounded-2xl bg-stone-100"></div>
+                            <?php endif; ?>
+                        <?php elseif (has_post_thumbnail()) : ?>
                             <?php the_post_thumbnail(
                                 'large',
                                 [
