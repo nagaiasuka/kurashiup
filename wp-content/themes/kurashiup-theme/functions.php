@@ -47,13 +47,51 @@ function kurashiup_output_favicon()
         return;
     }
 
-    $favicon_uri = get_template_directory_uri() . '/assets/images/favicon.svg';
+    $theme_dir = get_template_directory();
+    $theme_uri = get_template_directory_uri();
+    $svg_path = $theme_dir . '/assets/images/favicon.svg';
+    $png_path = $theme_dir . '/assets/images/favicon-32x32.png';
+    $apple_touch_icon_path = $theme_dir . '/assets/images/apple-touch-icon.png';
+    $svg_uri = $theme_uri . '/assets/images/favicon.svg';
+    $png_uri = $theme_uri . '/assets/images/favicon-32x32.png';
+    $apple_touch_icon_uri = $theme_uri . '/assets/images/apple-touch-icon.png';
+    $svg_version = file_exists($svg_path) ? (string) filemtime($svg_path) : null;
+    $png_version = file_exists($png_path) ? (string) filemtime($png_path) : null;
+    $apple_touch_icon_version = file_exists($apple_touch_icon_path) ? (string) filemtime($apple_touch_icon_path) : null;
 
-    echo '<link rel="icon" href="' . esc_url($favicon_uri) . '" type="image/svg+xml">' . "\n";
-    echo '<link rel="shortcut icon" href="' . esc_url($favicon_uri) . '" type="image/svg+xml">' . "\n";
+    echo '<link rel="icon" href="' . esc_url(add_query_arg('v', $svg_version, $svg_uri)) . '" type="image/svg+xml">' . "\n";
+    echo '<link rel="icon" href="' . esc_url(add_query_arg('v', $png_version, $png_uri)) . '" type="image/png" sizes="32x32">' . "\n";
+    echo '<link rel="shortcut icon" href="' . esc_url(add_query_arg('v', $png_version, $png_uri)) . '" type="image/png">' . "\n";
+    echo '<link rel="apple-touch-icon" href="' . esc_url(add_query_arg('v', $apple_touch_icon_version, $apple_touch_icon_uri)) . '">' . "\n";
     echo '<meta name="theme-color" content="#070B14">' . "\n";
 }
 add_action('wp_head', 'kurashiup_output_favicon', 5);
+
+function kurashiup_serve_favicon_ico()
+{
+    if ((function_exists('has_site_icon') && has_site_icon()) || ! isset($_SERVER['REQUEST_URI'])) {
+        return;
+    }
+
+    $request_path = wp_parse_url(home_url(wp_unslash($_SERVER['REQUEST_URI'])), PHP_URL_PATH);
+
+    if ('/favicon.ico' !== $request_path) {
+        return;
+    }
+
+    $favicon_path = get_template_directory() . '/assets/images/favicon.ico';
+
+    if (! file_exists($favicon_path)) {
+        status_header(404);
+        exit;
+    }
+
+    header('Content-Type: image/x-icon');
+    header('Cache-Control: public, max-age=86400');
+    readfile($favicon_path);
+    exit;
+}
+add_action('template_redirect', 'kurashiup_serve_favicon_ico', 0);
 
 function kurashiup_track_amazon_click()
 {
