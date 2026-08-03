@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="faviconTitle">
+<title id="faviconTitle">KurashiUp favicon</title>
+<defs>
+<linearGradient id="bg" x1="12" y1="10" x2="52" y2="56" gradientUnits="userSpaceOnUse">
+<stop offset="0" stop-color="#101827"/>
+<stop offset="1" stop-color="#070B14"/>
+</linearGradient>
+<linearGradient id="accent" x1="20" y1="18" x2="47" y2="46" gradientUnits="userSpaceOnUse">
+<stop offset="0" stop-color="#D6B47C"/>
+<stop offset="1" stop-color="#B99053"/>
+</linearGradient>
+</defs>
+<rect width="64" height="64" rx="18" fill="url(#bg)"/>
+<path d="M14 32c0-8.8 0-13.2 2.5-15.8S23 13.7 32 13.7s13.2 0 15.8 2.5S50.3 23.2 50.3 32s0 13.2-2.5 15.8S40.8 50.3 32 50.3s-13.2 0-15.8-2.5S14 40.8 14 32Z" fill="none" stroke="#C6A46A" stroke-opacity=".24" stroke-width="1.4"/>
+<path d="M22 16.5h6.6v15.1l13.1-15.1h8.1L36.2 31.9l14.4 15.6h-8.6L28.6 32.2v15.3H22v-31Z" fill="url(#accent)"/>
+<path d="M42.1 14.2 50.3 22.4" fill="none" stroke="#E8D6B4" stroke-linecap="round" stroke-width="2.3"/>
+<path d="m43.9 22.4 6.4.1-.1-6.4" fill="none" stroke="#E8D6B4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3"/>
+</svg>

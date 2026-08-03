@@ -3,6 +3,7 @@
 function kurashiup_theme_setup() {
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
+    add_theme_support('site-icon');
 
     register_nav_menus([
         'global' => 'グローバルナビゲーション',
@@ -39,6 +40,20 @@ function kurashiup_enqueue_assets() {
     );
 }
 add_action('wp_enqueue_scripts', 'kurashiup_enqueue_assets');
+
+function kurashiup_output_favicon()
+{
+    if (function_exists('has_site_icon') && has_site_icon()) {
+        return;
+    }
+
+    $favicon_uri = get_template_directory_uri() . '/assets/images/favicon.svg';
+
+    echo '<link rel="icon" href="' . esc_url($favicon_uri) . '" type="image/svg+xml">' . "\n";
+    echo '<link rel="shortcut icon" href="' . esc_url($favicon_uri) . '" type="image/svg+xml">' . "\n";
+    echo '<meta name="theme-color" content="#070B14">' . "\n";
+}
+add_action('wp_head', 'kurashiup_output_favicon', 5);
 
 function kurashiup_track_amazon_click()
 {
