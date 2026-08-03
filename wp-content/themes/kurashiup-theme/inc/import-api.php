@@ -8,7 +8,7 @@ function kurashiup_register_import_api_routes()
         [
             'methods' => WP_REST_Server::CREATABLE,
             'callback' => 'kurashiup_handle_import_product',
-            'permission_callback' => '__return_true',
+            'permission_callback' => 'kurashiup_validate_import_api_request',
         ]
     );
 }
@@ -16,28 +16,6 @@ add_action('rest_api_init', 'kurashiup_register_import_api_routes');
 
 function kurashiup_handle_import_product(WP_REST_Request $request)
 {
-    $token = kurashiup_get_import_api_token();
-
-    if ($token === '') {
-        return new WP_REST_Response([
-            'success' => false,
-            'wp_post_id' => null,
-            'synced_at' => current_time('mysql'),
-            'error' => 'Import API token is not configured.',
-        ], 500);
-    }
-
-    $provided_token = (string) ($request->get_header('X-Kurashiup-Token') ?: $request->get_param('secret'));
-
-    if ($provided_token === '' || ! hash_equals($token, $provided_token)) {
-        return new WP_REST_Response([
-            'success' => false,
-            'wp_post_id' => null,
-            'synced_at' => current_time('mysql'),
-            'error' => 'Unauthorized request.',
-        ], 401);
-    }
-
     $title = sanitize_text_field((string) $request->get_param('title'));
     $external_product_id = sanitize_text_field((string) $request->get_param('external_product_id'));
     $asin = sanitize_text_field((string) $request->get_param('asin'));
@@ -148,15 +126,81 @@ function kurashiup_handle_import_product(WP_REST_Request $request)
     ], $action === 'created' ? 201 : 200);
 }
 
-function kurashiup_get_import_api_token()
+function kurashiup_validate_import_api_request(WP_REST_Request $request)
 {
-    if (defined('KURASHIUP_IMPORT_API_TOKEN') && KURASHIUP_IMPORT_API_TOKEN) {
-        return (string) KURASHIUP_IMPORT_API_TOKEN;
+    $expected_token = kurashiup_get_import_api_token();
+
+    if ($expected_token === '') {
+        return new WP_Error(
+            'kurashiup_import_token_not_configured',
+            'Import API token is not configured.',
+            [
+                'status' => 500,
+                'success' => false,
+                'wp_post_id' => null,
+                'synced_at' => current_time('mysql'),
+                'error' => 'Import API token is not configured.',
+            ]
+        );
     }
 
-    $token = getenv('KURASHIUP_IMPORT_API_TOKEN');
+    $provided_token = kurashiup_get_request_import_api_token($request);
 
-    return is_string($token) ? trim($token) : '';
+    if ($provided_token === '' || ! hash_equals($expected_token, $provided_token)) {
+        return new WP_Error(
+            'kurashiup_invalid_import_token',
+            'Invalid import API token.',
+            [
+                'status' => 401,
+                'success' => false,
+                'wp_post_id' => null,
+                'synced_at' => current_time('mysql'),
+                'error' => 'Invalid import API token.',
+            ]
+        );
+    }
+
+    return true;
+}
+
+function kurashiup_get_import_api_token()
+{
+    $constant_names = [
+        'KURASHIUP_IMPORT_TOKEN',
+        'KURASHIUP_IMPORT_API_TOKEN',
+    ];
+
+    foreach ($constant_names as $constant_name) {
+        if (defined($constant_name) && constant($constant_name)) {
+            return trim((string) constant($constant_name));
+        }
+    }
+
+    $environment_names = [
+        'KURASHIUP_IMPORT_TOKEN',
+        'KURASHIUP_IMPORT_API_TOKEN',
+    ];
+
+    foreach ($environment_names as $environment_name) {
+        $token = getenv($environment_name);
+
+        if (is_string($token) && trim($token) !== '') {
+            return trim($token);
+        }
+    }
+
+    return '';
+}
+
+function kurashiup_get_request_import_api_token(WP_REST_Request $request)
+{
+    $header_token = (string) $request->get_header('X-Kurashiup-Token');
+
+    if ($header_token !== '') {
+        return trim($header_token);
+    }
+
+    return trim((string) $request->get_param('secret'));
 }
 
 function kurashiup_normalize_import_status($raw_status)
