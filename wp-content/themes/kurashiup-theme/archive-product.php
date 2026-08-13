@@ -1,7 +1,7 @@
 <?php get_header(); ?>
 
 <main class="bg-white">
-    <section class="relative overflow-hidden bg-[#070B14] pb-24 pt-52 text-white">
+    <section class="relative overflow-hidden bg-[#070B14] pb-24 pt-40 text-white md:pt-52">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_76%_30%,rgba(198,164,106,0.18),transparent_26%),radial-gradient(circle_at_18%_68%,rgba(30,41,59,0.55),transparent_34%)]"></div>
         <div class="absolute inset-0 opacity-[0.04] bg-[linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] bg-[size:82px_82px]"></div>
 
@@ -23,7 +23,7 @@
     <section class="py-24">
         <div class="mx-auto max-w-screen-2xl px-6">
             <?php if (have_posts()) : ?>
-                <div class="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
+                <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
                     <?php while (have_posts()) : the_post(); ?>
                         <?php get_template_part('template-parts/components/product-card'); ?>
                     <?php endwhile; ?>

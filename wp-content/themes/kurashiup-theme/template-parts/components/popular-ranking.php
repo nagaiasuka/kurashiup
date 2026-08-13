@@ -64,13 +64,13 @@ $product_archive_link = get_post_type_archive_link('product');
                         $category_name = ! empty($categories) && ! is_wp_error($categories) ? $categories[0]->name : '';
                     ?>
                         <article class="group rounded-3xl border border-stone-200 bg-white p-5 transition-all duration-500 hover:-translate-y-1 hover:shadow-xl">
-                            <a href="<?php the_permalink(); ?>" class="flex items-center gap-4">
+                            <a href="<?php the_permalink(); ?>" class="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
                                 <div class="flex h-24 w-12 items-center justify-center rounded-2xl bg-[#070B14] text-xl font-bold text-white">
                                     <?php echo esc_html($rank); ?>
                                 </div>
 
                                 <div class="flex w-full items-center gap-4">
-                                    <div class="flex items-center justify-center rounded-2xl bg-stone-50 p-5" style="width: 6rem;">
+                                    <div class="flex w-24 shrink-0 items-center justify-center rounded-2xl bg-stone-50 p-5">
                                         <?php if ($amazon_image_url) : ?>
                                             <img
                                                 src="<?php echo esc_url($amazon_image_url); ?>"
@@ -191,7 +191,7 @@ $product_archive_link = get_post_type_archive_link('product');
                                         <?php endif; ?>
                                     </div>
 
-                                    <div class="mt-6 flex items-center justify-between gap-4 border-t border-white/10" style="padding-top: 1.5rem;">
+                                    <div class="mt-6 flex flex-col items-start gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
                                         <p class="text-sm text-stone-400">
                                             <?php echo esc_html(number_format_i18n($highlighted_click_count)); ?> clicks
                                         </p>

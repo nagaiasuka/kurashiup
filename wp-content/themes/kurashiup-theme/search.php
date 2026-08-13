@@ -2,14 +2,14 @@
 
 <main class="bg-white">
 
-    <section class="bg-[#070B14] py-24 text-white">
+    <section class="bg-[#070B14] py-20 text-white md:py-24">
         <div class="mx-auto max-w-screen-2xl px-6">
 
             <p class="text-xs font-semibold uppercase tracking-[0.4em] text-[#C6A46A]">
                 Search
             </p>
 
-            <h1 class="mt-4 text-5xl font-bold">
+            <h1 class="mt-4 text-3xl font-bold md:text-5xl">
                 "<?php echo esc_html(get_search_query()); ?>"
             </h1>
 
@@ -25,7 +25,7 @@
 
             <?php if (have_posts()) : ?>
 
-                <div class="grid grid-cols-2 gap-6 lg:grid-cols-4">
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
 
                     <?php while (have_posts()) : the_post(); ?>
 
@@ -41,7 +41,7 @@
 
             <?php else : ?>
 
-                <div class="rounded-3xl bg-stone-100 p-16 text-center">
+                <div class="rounded-3xl bg-stone-100 p-8 text-center md:p-16">
 
                     <h2 class="text-3xl font-bold">
                         商品が見つかりませんでした。

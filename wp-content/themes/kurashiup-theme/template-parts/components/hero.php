@@ -3,23 +3,24 @@
 
     <div class="absolute inset-0 opacity-[0.04] bg-[linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] bg-[size:82px_82px]"></div>
 
-        <div class="relative mx-auto grid min-h-[82vh] max-w-screen-2xl items-center gap-10 px-6 pb-24 pt-52 lg:grid-cols-[0.95fr_1.05fr]">        <div>
+        <div class="relative mx-auto grid min-h-[70vh] max-w-screen-2xl items-center gap-10 px-6 pb-20 pt-40 md:min-h-[82vh] md:pb-24 md:pt-52 lg:grid-cols-[0.95fr_1.05fr]">
+        <div>
             <p class="text-xs font-semibold uppercase tracking-[0.45em] text-[#C6A46A]">
                 CURATED PRODUCTS
             </p>
-            <h1 class="mt-8 text-6xl font-bold leading-tight tracking-tight md:text-8xl">
+            <h1 class="mt-6 text-5xl font-bold leading-tight tracking-tight md:mt-8 md:text-8xl">
                 <span class="block text-white">暮らしを、</span>
                 <span class="block text-white">
                     少し<span class="text-[#C6A46A]">上げる。</span>
                 </span>
             </h1>
 
-            <p class="mt-8 max-w-xl text-base leading-8 text-stone-300 md:text-lg">
+            <p class="mt-6 max-w-xl text-base leading-7 text-stone-300 md:mt-8 md:text-lg md:leading-8">
                 本当に気に入ったものだけを。
                 日常に静かな高揚感を与えてくれるアイテムを厳選して紹介します。
             </p>
 
-            <div class="mt-12 flex items-center gap-5">
+            <div class="mt-10 flex items-center gap-5 md:mt-12">
                 <span class="h-px w-12 bg-[#C6A46A]"></span>
                 <span class="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">
                     Scroll

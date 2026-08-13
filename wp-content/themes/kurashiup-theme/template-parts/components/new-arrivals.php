@@ -35,7 +35,7 @@ $product_archive_link = get_post_type_archive_link('product');
 
         <?php if ($new_products->have_posts()) : ?>
 
-            <div class="grid grid-cols-2 gap-5 lg:grid-cols-4">
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
 
                 <?php while ($new_products->have_posts()) : $new_products->the_post(); ?>
 

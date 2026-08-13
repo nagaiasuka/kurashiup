@@ -2,7 +2,7 @@
     role="search"
     method="get"
     action="<?php echo esc_url(home_url('/')); ?>"
-    class="relative"
+    class="relative w-full sm:w-auto"
 >
 
     <input
@@ -31,7 +31,7 @@
         name="s"
         value="<?php echo esc_attr(get_search_query()); ?>"
         placeholder="Search products..."
-        class="w-64 rounded-full border border-white/10 bg-white/5 py-3 pl-12 pr-5 text-sm text-white placeholder:text-white/40 backdrop-blur-xl transition duration-300 focus:border-[#C6A46A] focus:bg-white/10 focus:outline-none"
+        class="w-full rounded-full border border-white/10 bg-white/5 py-3 pl-12 pr-5 text-sm text-white placeholder:text-white/40 backdrop-blur-xl transition duration-300 sm:w-64 focus:border-[#C6A46A] focus:bg-white/10 focus:outline-none"
     >
 
 </form>

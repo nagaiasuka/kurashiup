@@ -15,9 +15,9 @@ $is_front = is_front_page();
 ?>
 
 <header class="fixed left-0 top-0 z-50 w-full border-b border-white/10 bg-[#070B14]/70 text-white backdrop-blur-xl">
-    <div class="mx-auto flex max-w-screen-2xl items-center justify-between px-10 py-9 md:px-16">
+    <div class="mx-auto flex max-w-screen-2xl flex-wrap items-center justify-between gap-4 px-6 py-5 md:px-16 md:py-9">
 
-        <a href="<?php echo esc_url(home_url('/')); ?>" class="text-3xl font-bold tracking-tight">
+        <a href="<?php echo esc_url(home_url('/')); ?>" class="text-2xl font-bold tracking-tight md:text-3xl">
             KurashiUp
         </a>
 
@@ -27,6 +27,8 @@ $is_front = is_front_page();
             <a href="<?php echo esc_url($is_front ? '#popular-ranking' : home_url('/#popular-ranking')); ?>" class="text-white/70 transition hover:text-white">Ranking</a>
             <a href="<?php echo esc_url($is_front ? '#about' : home_url('/#about')); ?>" class="text-white/70 transition hover:text-white">About</a>
         </nav>
-        <?php get_search_form(); ?>
+        <div class="hidden md:block">
+            <?php get_search_form(); ?>
+        </div>
     </div>
 </header>
