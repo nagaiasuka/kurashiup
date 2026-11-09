@@ -74,6 +74,52 @@ function kurashiup_seo_head() {
 }
 add_action('wp_head', 'kurashiup_seo_head', 2);
 
+function kurashiup_guide_social_card() {
+    if (! is_singular('review_guide') || is_preview() || kurashiup_has_seo_plugin()) {
+        return;
+    }
+
+    $guide = get_queried_object();
+    if (! $guide instanceof WP_Post || $guide->post_status !== 'publish' || $guide->post_password !== '') {
+        return;
+    }
+
+    $image_id = get_post_thumbnail_id($guide);
+    $image = wp_get_attachment_image_src($image_id, 'full');
+    if (! $image) {
+        return;
+    }
+
+    $title = wp_strip_all_tags(get_the_title($guide));
+    $description = kurashiup_seo_description();
+    $image_alt = get_post_meta($image_id, '_wp_attachment_image_alt', true) ?: $title;
+    $open_graph = [
+        'og:type' => 'article',
+        'og:title' => $title,
+        'og:description' => $description,
+        'og:url' => get_permalink($guide),
+        'og:image' => $image[0],
+        'og:image:width' => $image[1],
+        'og:image:height' => $image[2],
+        'og:image:alt' => $image_alt,
+    ];
+    $twitter = [
+        'twitter:card' => 'summary_large_image',
+        'twitter:title' => $title,
+        'twitter:description' => $description,
+        'twitter:image' => $image[0],
+        'twitter:image:alt' => $image_alt,
+    ];
+
+    foreach ($open_graph as $property => $content) {
+        printf("<meta property=\"%s\" content=\"%s\">\n", esc_attr($property), esc_attr($content));
+    }
+    foreach ($twitter as $name => $content) {
+        printf("<meta name=\"%s\" content=\"%s\">\n", esc_attr($name), esc_attr($content));
+    }
+}
+add_action('wp_head', 'kurashiup_guide_social_card', 3);
+
 function kurashiup_noindex_empty_guide_archive($robots) {
     global $wp_query;
     if (is_post_type_archive('review_guide') && ! $wp_query->post_count) {
