@@ -45,8 +45,8 @@ function kurashiup_render_review_guide_meta_box($post) {
     ?>
     <p><label for="kurashiup_meta_description"><strong>検索結果向け説明文</strong>（120字前後）</label></p>
     <textarea id="kurashiup_meta_description" name="kurashiup_meta_description" rows="3" maxlength="200" class="widefat"><?php echo esc_textarea($description); ?></textarea>
-    <p><label for="kurashiup_review_basis"><strong>比較・レビューの根拠</strong></label></p>
-    <textarea id="kurashiup_review_basis" name="kurashiup_review_basis" rows="3" class="widefat" placeholder="例：メーカー公表仕様と、公開購入者レビューの傾向を編集部が確認"><?php echo esc_textarea($basis); ?></textarea>
+    <p><label for="kurashiup_review_basis"><strong>比較・レビューの根拠と出典</strong></label></p>
+    <textarea id="kurashiup_review_basis" name="kurashiup_review_basis" rows="3" class="widefat" placeholder="資料名と確認した内容を記入。出典URLは独立した行に記載。"><?php echo esc_textarea($basis); ?></textarea>
     <p><label for="kurashiup_review_checked_at"><strong>情報確認日</strong></label></p>
     <input id="kurashiup_review_checked_at" name="kurashiup_review_checked_at" type="date" value="<?php echo esc_attr($checked_at); ?>">
     <p class="description">実際に使用していない場合は、本文にも「購入者レビュー・公開仕様の調査」と明記し、使用体験として表現しないでください。</p>
@@ -55,8 +55,10 @@ function kurashiup_render_review_guide_meta_box($post) {
 
 function kurashiup_save_review_guide_meta($post_id) {
     if (
-        ! isset($_POST['kurashiup_review_guide_nonce'])
+        ! is_string($_POST['kurashiup_review_guide_nonce'] ?? null)
         || ! wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['kurashiup_review_guide_nonce'])), 'kurashiup_save_review_guide_meta')
+        || wp_is_post_autosave($post_id)
+        || wp_is_post_revision($post_id)
         || (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
         || ! current_user_can('edit_post', $post_id)
         || 'review_guide' !== get_post_type($post_id)
@@ -70,17 +72,30 @@ function kurashiup_save_review_guide_meta($post_id) {
         'kurashiup_review_checked_at' => '_kurashiup_review_checked_at',
     ];
     foreach ($fields as $input => $meta_key) {
-        if (! isset($_POST[$input])) {
+        if (! is_string($_POST[$input] ?? null)) {
             continue;
         }
         $value = sanitize_textarea_field(wp_unslash($_POST[$input]));
-        update_post_meta($post_id, $meta_key, $value);
+        if ('kurashiup_meta_description' === $input) {
+            $value = sanitize_text_field($value);
+        }
+        if ('kurashiup_review_checked_at' === $input && '' !== $value) {
+            $date = DateTimeImmutable::createFromFormat('!Y-m-d', $value);
+            if (! $date || $date->format('Y-m-d') !== $value) {
+                continue;
+            }
+        }
+        if ('' === $value) {
+            delete_post_meta($post_id, $meta_key);
+        } else {
+            update_post_meta($post_id, $meta_key, wp_slash($value));
+        }
     }
 }
 add_action('save_post_review_guide', 'kurashiup_save_review_guide_meta');
 
 function kurashiup_review_guide_meta_description() {
-    if (! is_singular('review_guide')) {
+    if (! is_singular('review_guide') || post_password_required(get_queried_object_id())) {
         return;
     }
     // Avoid duplicate description tags when a dedicated SEO plugin is active.
@@ -93,13 +108,6 @@ function kurashiup_review_guide_meta_description() {
     }
 }
 add_action('wp_head', 'kurashiup_review_guide_meta_description', 2);
-
-function kurashiup_search_review_guides($query) {
-    if (! is_admin() && $query->is_main_query() && $query->is_search()) {
-        $query->set('post_type', ['product', 'review_guide']);
-    }
-}
-add_action('pre_get_posts', 'kurashiup_search_review_guides', 20);
 
 function kurashiup_analytics_admin_menu() {
     add_menu_page(
@@ -118,12 +126,13 @@ function kurashiup_render_analytics_page() {
     if (! current_user_can('manage_options')) {
         return;
     }
-    $products = get_posts([
+    $page = max(1, absint($_GET['paged'] ?? 1));
+    $products = new WP_Query([
         'post_type' => 'product',
         'post_status' => ['publish', 'draft', 'private'],
-        'posts_per_page' => 100,
-        'orderby' => 'title',
-        'order' => 'ASC',
+        'posts_per_page' => 50,
+        'paged' => $page,
+        'orderby' => ['title' => 'ASC', 'ID' => 'ASC'],
     ]);
     ?>
     <div class="wrap">
@@ -132,7 +141,7 @@ function kurashiup_render_analytics_page() {
         <table class="widefat striped">
             <thead><tr><th>商品</th><th>状態</th><th>Amazonクリック（累計）</th></tr></thead>
             <tbody>
-            <?php if ($products) : foreach ($products as $product) : ?>
+            <?php if ($products->posts) : foreach ($products->posts as $product) : ?>
                 <tr>
                     <td><a href="<?php echo esc_url(get_edit_post_link($product->ID)); ?>"><?php echo esc_html(get_the_title($product)); ?></a></td>
                     <td><?php echo esc_html(get_post_status_object($product->post_status)->label); ?></td>
@@ -143,9 +152,24 @@ function kurashiup_render_analytics_page() {
             <?php endif; ?>
             </tbody>
         </table>
+        <?php if ($products->max_num_pages > 1) : ?>
+            <div class="tablenav"><div class="tablenav-pages">
+                <?php echo wp_kses_post(paginate_links([
+                    'current' => $page,
+                    'total' => $products->max_num_pages,
+                    'prev_text' => '前へ',
+                    'next_text' => '次へ',
+                ])); ?>
+            </div></div>
+        <?php endif; ?>
         <hr>
         <h2>検索・閲覧データ</h2>
-        <p>検索結果の表示回数・クリック数はGoogle Search Console、サイト閲覧数はGoogle Analytics 4の連携が必要です。連携後はGoogle Site Kitの管理画面で確認してください。</p>
+        <ul class="ul-disc">
+            <li>Google Search Console：Google検索での表示回数・クリック数（この画面では未連携）</li>
+            <li>Google Analytics 4：サイトの閲覧数（この画面では未連携）</li>
+            <li>X：Xの投稿インプレッション（この画面では未連携）</li>
+        </ul>
+        <p>Googleのデータは連携後にSite Kitなどで、XのデータはX側の分析画面で確認してください。</p>
     </div>
     <?php
 }

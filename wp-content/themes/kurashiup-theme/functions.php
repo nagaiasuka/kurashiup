@@ -95,83 +95,63 @@ function kurashiup_redirect_to_amazon()
 }
 
 /**
- * 商品のみ検索対象にする
+ * Include guides alongside products in the site's main search.
  */
-function kurashiup_search_products_only($query)
+function kurashiup_search_content_types($query)
 {
-    if (
-        ! is_admin()
-        && $query->is_main_query()
-        && $query->is_search()
-    ) {
-        $query->set('post_type', 'product');
+    if (! is_admin() && $query->is_main_query() && $query->is_search()) {
+        $query->set('post_type', ['product', 'review_guide']);
     }
 }
+add_action('pre_get_posts', 'kurashiup_search_content_types');
 
 /**
- * 商品説明・ブランドも検索対象に含める
+ * Include product taxonomy names and short descriptions without changing
+ * WordPress's outer post type, status and visibility constraints.
  */
-function kurashiup_search_join($join)
+function kurashiup_search_product_details($search, $query)
 {
     global $wpdb;
 
-    if (is_search() && !is_admin()) {
-        $join .= " LEFT JOIN {$wpdb->term_relationships} tr ON {$wpdb->posts}.ID = tr.object_id";
-        $join .= " LEFT JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id";
-        $join .= " LEFT JOIN {$wpdb->terms} t ON tt.term_id = t.term_id";
-        $join .= " LEFT JOIN {$wpdb->postmeta} pm ON {$wpdb->posts}.ID = pm.post_id";
+    if (is_admin() || ! $query->is_main_query() || ! $query->is_search()
+        || ! preg_match('/^\s*AND\s+(.+)$/is', $search, $core)
+        || ! is_string($query->get('s')) || '' === trim($query->get('s'))) {
+        return $search;
     }
 
-    return $join;
-}
-add_filter('posts_join', 'kurashiup_search_join');
+    $like = '%' . $wpdb->esc_like($query->get('s')) . '%';
+    $product_match = $wpdb->prepare(
+        "({$wpdb->posts}.post_type = 'product' AND (
+            EXISTS (
+                SELECT 1 FROM {$wpdb->term_relationships} tr
+                JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
+                JOIN {$wpdb->terms} t ON tt.term_id = t.term_id
+                WHERE tr.object_id = {$wpdb->posts}.ID
+                AND tt.taxonomy IN ('product_category', 'product_brand', 'product_tag')
+                AND t.name LIKE %s
+            )
+            OR EXISTS (
+                SELECT 1 FROM {$wpdb->postmeta} pm
+                WHERE pm.post_id = {$wpdb->posts}.ID AND pm.meta_key = '_short_description'
+                AND pm.meta_value LIKE %s
+            )
+        ))",
+        $like,
+        $like
+    );
 
-function kurashiup_search_where($where)
-{
-    global $wpdb;
-
-    if (is_search() && !is_admin()) {
-
-        $keyword = get_search_query();
-
-        if ($keyword) {
-
-            $like = '%' . $wpdb->esc_like($keyword) . '%';
-
-            $where .= $wpdb->prepare(
-                " OR (
-                    t.name LIKE %s
-                    OR (
-                        pm.meta_key = '_short_description'
-                        AND pm.meta_value LIKE %s
-                    )
-                )",
-                $like,
-                $like
-            );
-        }
+    $search = " AND (({$core[1]}) OR {$product_match}) ";
+    if (! is_user_logged_in()) {
+        $search .= " AND ({$wpdb->posts}.post_password = '') ";
     }
-
-    return $where;
+    return $search;
 }
-add_filter('posts_where', 'kurashiup_search_where');
-
-function kurashiup_search_distinct($distinct)
-{
-    if (is_search() && !is_admin()) {
-        return "DISTINCT";
-    }
-
-    return $distinct;
-}
-add_filter('posts_distinct', 'kurashiup_search_distinct');
-add_action('pre_get_posts', 'kurashiup_search_products_only');
+add_filter('posts_search', 'kurashiup_search_product_details', 10, 2);
 
 add_action('admin_post_kurashiup_redirect_to_amazon', 'kurashiup_redirect_to_amazon');
 add_action('admin_post_nopriv_kurashiup_redirect_to_amazon', 'kurashiup_redirect_to_amazon');
 
+require_once get_template_directory() . '/inc/review-guides-analytics.php';
 require_once get_template_directory() . '/inc/post-types.php';
 require_once get_template_directory() . '/inc/product-fields.php';
 require_once get_template_directory() . '/inc/taxonomies.php';
-
-require_once get_template_directory() . '/inc/review-guides-analytics.php';
