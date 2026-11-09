@@ -41,7 +41,7 @@ function kurashiup_seo_description() {
 }
 
 function kurashiup_seo_head() {
-    if (is_preview() || kurashiup_has_seo_plugin()) {
+    if (kurashiup_has_seo_plugin()) {
         return;
     }
 
@@ -51,7 +51,7 @@ function kurashiup_seo_head() {
     }
 
     // WordPress already emits the canonical URL on individual posts and pages.
-    if (is_singular()) {
+    if (is_singular() || is_preview()) {
         return;
     }
 
