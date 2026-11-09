@@ -25,6 +25,17 @@ function kurashiup_register_review_guide_post_type() {
 }
 add_action('init', 'kurashiup_register_review_guide_post_type');
 
+function kurashiup_install_review_guide_rewrite_rules() {
+    if (get_option('kurashiup_review_guide_rewrite_version') === '1') {
+        return;
+    }
+
+    // Register the new archive and article URLs on sites with existing permalinks.
+    flush_rewrite_rules(false);
+    update_option('kurashiup_review_guide_rewrite_version', '1');
+}
+add_action('wp_loaded', 'kurashiup_install_review_guide_rewrite_rules');
+
 function kurashiup_review_guide_formats() {
     return [
         'comparison' => '比較・解説',
