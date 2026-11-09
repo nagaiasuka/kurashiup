@@ -7,6 +7,8 @@
             </p>
         </div>
 
+        <a href="<?php echo esc_url(get_post_type_archive_link('review_guide')); ?>" class="text-sm text-stone-300 hover:text-white">ガイド記事</a>
+
         <p class="text-sm text-stone-500">
             © 2026 KurashiUp.
         </p>

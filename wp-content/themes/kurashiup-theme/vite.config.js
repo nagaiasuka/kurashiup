@@ -8,13 +8,17 @@ export default defineConfig({
   build: {
     outDir: 'assets',
     emptyOutDir: false,
+    cssCodeSplit: false,
     rollupOptions: {
       input: {
         app: 'src/js/app.js',
       },
       output: {
+        format: 'iife',
         entryFileNames: 'js/[name].js',
-        assetFileNames: 'css/[name][extname]',
+        assetFileNames: (asset) => asset.names.some((name) => name.endsWith('.css'))
+          ? 'css/app.css'
+          : 'css/[name][extname]',
       },
     },
   },

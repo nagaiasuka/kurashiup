@@ -1,100 +1,52 @@
+<?php
+$guide_archive_link = get_post_type_archive_link('review_guide');
+$latest_guides = get_posts([
+    'post_type' => 'review_guide',
+    'post_status' => 'publish',
+    'posts_per_page' => 3,
+    'has_password' => false,
+]);
+?>
 <section class="relative overflow-hidden bg-[#070B14] text-white">
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_76%_30%,rgba(198,164,106,0.18),transparent_26%),radial-gradient(circle_at_18%_68%,rgba(30,41,59,0.55),transparent_34%)]"></div>
-
     <div class="absolute inset-0 opacity-[0.04] bg-[linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] bg-[size:82px_82px]"></div>
 
-        <div class="relative mx-auto grid min-h-[70vh] max-w-screen-2xl items-center gap-10 px-6 pb-20 pt-40 md:min-h-[82vh] md:pb-24 md:pt-52 lg:grid-cols-[0.95fr_1.05fr]">
+    <div class="relative mx-auto grid max-w-screen-2xl items-center gap-10 px-6 pb-20 pt-32 md:px-12 md:pt-44 lg:min-h-[72vh] lg:grid-cols-2 lg:gap-16">
         <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.45em] text-[#C6A46A]">
-                CURATED PRODUCTS
-            </p>
-            <h1 class="mt-6 text-5xl font-bold leading-tight tracking-tight md:mt-8 md:text-8xl">
-                <span class="block text-white">暮らしを、</span>
-                <span class="block text-white">
-                    少し<span class="text-[#C6A46A]">上げる。</span>
-                </span>
+            <p class="text-xs font-semibold uppercase tracking-[0.4em] text-[#E4C58E]">KURASHIUP GUIDE</p>
+            <h1 class="mt-6 text-4xl font-bold leading-tight tracking-tight sm:text-6xl">
+                <span class="block text-white">暮らしに合うものを、</span>
+                <span class="block text-[#E4C58E]">見つけよう。</span>
             </h1>
-
-            <p class="mt-6 max-w-xl text-base leading-7 text-stone-300 md:mt-8 md:text-lg md:leading-8">
-                本当に気に入ったものだけを。
-                日常に静かな高揚感を与えてくれるアイテムを厳選して紹介します。
+            <p class="mt-6 max-w-xl text-base leading-8 text-stone-300 md:text-lg">
+                暮らしの道具の選び方から、あると便利なグッズまで。メーカーの公開情報や購入者レビューをもとに紹介します。
             </p>
-
-            <div class="mt-10 flex items-center gap-5 md:mt-12">
-                <span class="h-px w-12 bg-[#C6A46A]"></span>
-                <span class="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">
-                    Scroll
-                </span>
-            </div>
+            <a href="<?php echo esc_url($guide_archive_link); ?>" class="mt-8 inline-flex min-h-12 items-center gap-4 rounded-full bg-[#E4C58E] px-6 py-3 font-semibold text-[#070B14] hover:bg-white">
+                ガイド記事を読む <span aria-hidden="true">→</span>
+            </a>
         </div>
 
-        <div class="relative hidden h-[540px] lg:block">
-
-            <?php
-            $hero_products = new WP_Query([
-                'post_type' => 'product',
-                'posts_per_page' => 5,
-                'post_status' => 'publish',
-            ]);
-            ?>
-
-            <?php if ($hero_products->have_posts()) : ?>
-                <?php
-                $positions = [
-                    'left-[10%] top-[4%] h-44 w-44 rotate-[-10deg]',
-                    'right-[10%] top-[2%] h-52 w-52 rotate-[8deg]',
-                    'left-[38%] top-[30%] h-60 w-60 rotate-[-2deg]',
-                    'left-[6%] bottom-[16%] h-40 w-40 rotate-[7deg]',
-                    'right-[6%] bottom-[8%] h-48 w-48 rotate-[-7deg]',
-                ];
-
-                $index = 0;
-                ?>
-
-                <?php while ($hero_products->have_posts()) : $hero_products->the_post(); ?>
-                    <?php
-                    $amazon_image_url = get_post_meta(get_the_ID(), '_kurashiup_amazon_image_url', true);
-                    $thumbnail_url = get_the_post_thumbnail_url(get_the_ID(), 'medium');
-                    ?>
-
-                    <a
-                        href="<?php the_permalink(); ?>"
-                        class="absolute <?php echo esc_attr($positions[$index] ?? $positions[0]); ?> group animate-float rounded-[2rem] border border-white/10 bg-white/[0.045] p-5 shadow-2xl backdrop-blur-xl transition duration-700 hover:-translate-y-3 hover:bg-white/[0.08]"
-                        style="animation-delay: <?php echo esc_attr($index * 0.4); ?>s;"
-                    >
-                        <?php if ($amazon_image_url) : ?>
-                            <img
-                                src="<?php echo esc_url($amazon_image_url); ?>"
-                                alt="<?php echo esc_attr(get_the_title()); ?>"
-                                class="h-full w-full object-contain transition duration-700 group-hover:scale-105"
-                                loading="lazy"
-                                referrerpolicy="no-referrer"
-                                onerror="this.onerror=null;<?php if ($thumbnail_url) : ?>this.src='<?php echo esc_js($thumbnail_url); ?>';<?php else : ?>this.style.display='none';if(this.nextElementSibling){this.nextElementSibling.style.display='block';}<?php endif; ?>"
-                            >
-                            <?php if (! $thumbnail_url) : ?>
-                                <div class="hidden h-full w-full rounded-2xl bg-white/10"></div>
-                            <?php endif; ?>
-                        <?php elseif (has_post_thumbnail()) : ?>
-                            <?php the_post_thumbnail(
-                                'medium',
-                                [
-                                    'class' => 'h-full w-full object-contain transition duration-700 group-hover:scale-105'
-                                ]
-                            ); ?>
-                        <?php else : ?>
-                            <div class="h-full w-full rounded-2xl bg-white/10"></div>
-                        <?php endif; ?>
-                    </a>
-
-                    <?php $index++; ?>
-
-                <?php endwhile; ?>
-
-                <?php wp_reset_postdata(); ?>
+        <div class="rounded-3xl border border-white/15 bg-white/5 p-6 sm:p-8">
+            <?php if ($latest_guides) : ?>
+                <h2 class="text-xl font-bold text-white">新着のガイド記事</h2>
+                <ul class="mt-4 divide-y divide-white/15">
+                    <?php foreach ($latest_guides as $guide) : ?>
+                        <li>
+                            <a href="<?php echo esc_url(get_permalink($guide)); ?>" class="flex items-center justify-between gap-4 py-4 font-semibold text-white hover:text-[#E4C58E]">
+                                <span><?php echo esc_html(get_the_title($guide)); ?></span>
+                                <span class="shrink-0 text-[#E4C58E]" aria-hidden="true">→</span>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else : ?>
+                <h2 class="text-xl font-bold text-white">記事でわかること</h2>
+                <ul class="mt-4 list-disc space-y-3 ps-5 text-sm leading-7 text-stone-300">
+                    <li>メーカーの公開仕様で比較できる違い</li>
+                    <li>購入者レビューに見られる評価や気になる点</li>
+                    <li>筋トレや家事など、場面に合わせてあると便利なグッズ</li>
+                </ul>
             <?php endif; ?>
-
-            <div class="absolute bottom-0 left-1/2 h-24 w-[72%] -translate-x-1/2 rounded-[100%] bg-[#C6A46A]/16 blur-3xl"></div>
         </div>
-
     </div>
 </section>

@@ -2,19 +2,19 @@
 
 <main class="bg-white">
 
-    <section class="bg-[#070B14] py-20 text-white md:py-24">
+    <section class="bg-[#070B14] pb-20 pt-24 text-white md:pt-36">
         <div class="mx-auto max-w-screen-2xl px-6">
 
             <p class="text-xs font-semibold uppercase tracking-[0.4em] text-[#C6A46A]">
                 Search
             </p>
 
-            <h1 class="mt-4 text-3xl font-bold md:text-5xl">
+            <h1 class="mt-4 break-words text-3xl font-bold text-white md:text-5xl">
                 "<?php echo esc_html(get_search_query()); ?>"
             </h1>
 
             <p class="mt-4 text-stone-300">
-                <?php echo $wp_query->found_posts; ?>件の商品が見つかりました。
+                <?php echo esc_html(number_format_i18n($wp_query->found_posts)); ?>件の商品・ガイド記事が見つかりました。
             </p>
 
         </div>
@@ -32,19 +32,22 @@
                         <?php
                         if (get_post_type() === 'product') {
                             get_template_part('template-parts/components/product-card');
+                        } elseif (get_post_type() === 'review_guide') {
+                            get_template_part('template-parts/components/review-guide-card');
                         }
                         ?>
 
                     <?php endwhile; ?>
 
                 </div>
+                <?php the_posts_pagination(); ?>
 
             <?php else : ?>
 
                 <div class="rounded-3xl bg-stone-100 p-8 text-center md:p-16">
 
                     <h2 class="text-3xl font-bold">
-                        商品が見つかりませんでした。
+                        商品・ガイド記事が見つかりませんでした。
                     </h2>
 
                     <p class="mt-6 text-stone-500">

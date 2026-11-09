@@ -18,3 +18,16 @@
 .animate-float {
     animation: float 6s ease-in-out infinite;
 }
+
+@layer components {
+    .review-guide-content > * + * { margin-block-start: 1.25rem; }
+    .review-guide-content h2 { @apply mt-10 text-2xl; }
+    .review-guide-content h3 { @apply mt-8 text-xl; }
+    .review-guide-content ul { @apply list-disc ps-6; }
+    .review-guide-content ol { @apply list-decimal ps-6; }
+    .review-guide-content a { @apply underline; }
+    .review-guide-content .wp-block-table { @apply overflow-x-auto; }
+    .review-guide-content .wp-block-table :is(th, td) { @apply border border-stone-300 p-2; }
+    .search .pagination, .post-type-archive-review_guide .pagination { @apply mt-8; }
+    .search .page-numbers, .post-type-archive-review_guide .page-numbers { @apply me-2; }
+}
