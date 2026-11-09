@@ -205,6 +205,7 @@ add_action('admin_post_kurashiup_redirect_to_amazon', 'kurashiup_redirect_to_ama
 add_action('admin_post_nopriv_kurashiup_redirect_to_amazon', 'kurashiup_redirect_to_amazon');
 
 require_once get_template_directory() . '/inc/review-guides-analytics.php';
+require_once get_template_directory() . '/inc/seo.php';
 require_once get_template_directory() . '/inc/post-types.php';
 require_once get_template_directory() . '/inc/product-fields.php';
 require_once get_template_directory() . '/inc/taxonomies.php';

@@ -133,21 +133,6 @@ function kurashiup_save_review_guide_meta($post_id) {
 }
 add_action('save_post_review_guide', 'kurashiup_save_review_guide_meta');
 
-function kurashiup_review_guide_meta_description() {
-    if (! is_singular('review_guide') || post_password_required(get_queried_object_id())) {
-        return;
-    }
-    // Avoid duplicate description tags when a dedicated SEO plugin is active.
-    if (defined('WPSEO_VERSION') || defined('RANK_MATH_VERSION') || defined('AIOSEO_VERSION')) {
-        return;
-    }
-    $description = get_post_meta(get_queried_object_id(), '_kurashiup_meta_description', true);
-    if ($description) {
-        echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
-    }
-}
-add_action('wp_head', 'kurashiup_review_guide_meta_description', 2);
-
 function kurashiup_analytics_admin_menu() {
     add_menu_page(
         'KurashiUpのクリック分析',
