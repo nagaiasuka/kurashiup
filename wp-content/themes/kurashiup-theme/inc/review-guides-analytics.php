@@ -7,10 +7,10 @@ defined('ABSPATH') || exit;
 function kurashiup_register_review_guide_post_type() {
     register_post_type('review_guide', [
         'labels' => [
-            'name' => '比較・解説記事',
-            'singular_name' => '比較・解説記事',
-            'add_new_item' => '比較・解説記事を追加',
-            'edit_item' => '比較・解説記事を編集',
+            'name' => 'ガイド記事',
+            'singular_name' => 'ガイド記事',
+            'add_new_item' => 'ガイド記事を追加',
+            'edit_item' => 'ガイド記事を編集',
             'view_item' => '記事を見る',
             'search_items' => '記事を検索',
         ],
@@ -25,10 +25,23 @@ function kurashiup_register_review_guide_post_type() {
 }
 add_action('init', 'kurashiup_register_review_guide_post_type');
 
+function kurashiup_review_guide_formats() {
+    return [
+        'comparison' => '比較・解説',
+        'roundup' => 'グッズ紹介',
+    ];
+}
+
+function kurashiup_review_guide_format_label($post_id) {
+    $formats = kurashiup_review_guide_formats();
+    $format = get_post_meta($post_id, '_kurashiup_guide_format', true);
+    return $formats[$format] ?? $formats['comparison'];
+}
+
 function kurashiup_review_guide_meta_box() {
     add_meta_box(
         'kurashiup_review_guide_details',
-        '記事の根拠・SEO情報',
+        '記事の形式・出典・SEO情報',
         'kurashiup_render_review_guide_meta_box',
         'review_guide',
         'normal',
@@ -39,13 +52,21 @@ add_action('add_meta_boxes', 'kurashiup_review_guide_meta_box');
 
 function kurashiup_render_review_guide_meta_box($post) {
     wp_nonce_field('kurashiup_save_review_guide_meta', 'kurashiup_review_guide_nonce');
+    $format = get_post_meta($post->ID, '_kurashiup_guide_format', true) ?: 'comparison';
     $description = get_post_meta($post->ID, '_kurashiup_meta_description', true);
     $basis = get_post_meta($post->ID, '_kurashiup_review_basis', true);
     $checked_at = get_post_meta($post->ID, '_kurashiup_review_checked_at', true);
     ?>
+    <p><label for="kurashiup_guide_format"><strong>記事の形式</strong></label></p>
+    <select id="kurashiup_guide_format" name="kurashiup_guide_format">
+        <?php foreach (kurashiup_review_guide_formats() as $value => $label) : ?>
+            <option value="<?php echo esc_attr($value); ?>" <?php selected($format, $value); ?>><?php echo esc_html($label); ?></option>
+        <?php endforeach; ?>
+    </select>
+    <p class="description">用途や場面に合わせて便利な商品を紹介する場合は「グッズ紹介」を選んでください。</p>
     <p><label for="kurashiup_meta_description"><strong>検索結果向け説明文</strong>（120字前後）</label></p>
     <textarea id="kurashiup_meta_description" name="kurashiup_meta_description" rows="3" maxlength="200" class="widefat"><?php echo esc_textarea($description); ?></textarea>
-    <p><label for="kurashiup_review_basis"><strong>比較・レビューの根拠と出典</strong></label></p>
+    <p><label for="kurashiup_review_basis"><strong>記事の根拠と出典</strong></label></p>
     <textarea id="kurashiup_review_basis" name="kurashiup_review_basis" rows="3" class="widefat" placeholder="資料名と確認した内容を記入。出典URLは独立した行に記載。"><?php echo esc_textarea($basis); ?></textarea>
     <p><label for="kurashiup_review_checked_at"><strong>情報確認日</strong></label></p>
     <input id="kurashiup_review_checked_at" name="kurashiup_review_checked_at" type="date" value="<?php echo esc_attr($checked_at); ?>">
@@ -64,6 +85,13 @@ function kurashiup_save_review_guide_meta($post_id) {
         || 'review_guide' !== get_post_type($post_id)
     ) {
         return;
+    }
+
+    if (is_string($_POST['kurashiup_guide_format'] ?? null)) {
+        $format = sanitize_key(wp_unslash($_POST['kurashiup_guide_format']));
+        if (isset(kurashiup_review_guide_formats()[$format])) {
+            update_post_meta($post_id, '_kurashiup_guide_format', $format);
+        }
     }
 
     $fields = [

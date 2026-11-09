@@ -23,7 +23,7 @@ $is_front = is_front_page();
         </a>
 
         <nav aria-label="メインナビゲーション" class="flex items-center gap-4 text-sm md:gap-5 xl:gap-8">
-            <a href="<?php echo esc_url($guide_archive_link); ?>" class="whitespace-nowrap font-semibold text-[#E4C58E] hover:text-white">比較・解説記事</a>
+            <a href="<?php echo esc_url($guide_archive_link); ?>" class="whitespace-nowrap font-semibold text-[#E4C58E] hover:text-white">ガイド記事</a>
             <a href="<?php echo esc_url($product_archive_link ?: home_url('/product/')); ?>" class="hidden text-white/70 transition hover:text-white sm:inline">Products</a>
             <a href="<?php echo esc_url($is_front ? '#categories' : home_url('/#categories')); ?>" class="hidden text-white/70 transition hover:text-white md:inline">Category</a>
             <a href="<?php echo esc_url($is_front ? '#popular-ranking' : home_url('/#popular-ranking')); ?>" class="hidden text-white/70 transition hover:text-white md:inline">Ranking</a>

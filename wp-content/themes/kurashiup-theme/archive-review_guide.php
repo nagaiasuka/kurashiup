@@ -4,7 +4,7 @@
     <header class="mb-10">
       <p class="text-sm font-semibold tracking-wide text-stone-500">KURASHIUP GUIDE</p>
       <h1 class="mt-3 text-3xl font-bold text-stone-900"><?php post_type_archive_title(); ?></h1>
-      <p class="mt-4 max-w-2xl leading-7 text-stone-600">公開情報や購入者レビューを調べ、商品選びのポイントを比較・解説します。</p>
+      <p class="mt-4 max-w-2xl leading-7 text-stone-600">暮らしの道具の選び方や、場面に合わせてあると便利なグッズを紹介します。</p>
     </header>
     <?php if (have_posts()) : ?>
       <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

@@ -14,7 +14,7 @@
             </h1>
 
             <p class="mt-4 text-stone-300">
-                <?php echo esc_html(number_format_i18n($wp_query->found_posts)); ?>件の商品・比較記事が見つかりました。
+                <?php echo esc_html(number_format_i18n($wp_query->found_posts)); ?>件の商品・ガイド記事が見つかりました。
             </p>
 
         </div>
@@ -47,7 +47,7 @@
                 <div class="rounded-3xl bg-stone-100 p-8 text-center md:p-16">
 
                     <h2 class="text-3xl font-bold">
-                        商品・比較記事が見つかりませんでした。
+                        商品・ガイド記事が見つかりませんでした。
                     </h2>
 
                     <p class="mt-6 text-stone-500">

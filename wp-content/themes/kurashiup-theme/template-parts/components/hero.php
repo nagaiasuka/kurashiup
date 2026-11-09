@@ -16,19 +16,19 @@ $latest_guides = get_posts([
             <p class="text-xs font-semibold uppercase tracking-[0.4em] text-[#E4C58E]">KURASHIUP GUIDE</p>
             <h1 class="mt-6 text-4xl font-bold leading-tight tracking-tight sm:text-6xl">
                 <span class="block text-white">暮らしに合うものを、</span>
-                <span class="block text-[#E4C58E]">比べて選ぶ。</span>
+                <span class="block text-[#E4C58E]">見つけよう。</span>
             </h1>
             <p class="mt-6 max-w-xl text-base leading-8 text-stone-300 md:text-lg">
-                メーカーの公開仕様や購入者レビューをもとに、暮らしの道具を比較。選ぶときに見るべきポイントを解説します。
+                暮らしの道具の選び方から、あると便利なグッズまで。メーカーの公開情報や購入者レビューをもとに紹介します。
             </p>
             <a href="<?php echo esc_url($guide_archive_link); ?>" class="mt-8 inline-flex min-h-12 items-center gap-4 rounded-full bg-[#E4C58E] px-6 py-3 font-semibold text-[#070B14] hover:bg-white">
-                比較・解説記事を読む <span aria-hidden="true">→</span>
+                ガイド記事を読む <span aria-hidden="true">→</span>
             </a>
         </div>
 
         <div class="rounded-3xl border border-white/15 bg-white/5 p-6 sm:p-8">
             <?php if ($latest_guides) : ?>
-                <h2 class="text-xl font-bold text-white">新着の比較・解説記事</h2>
+                <h2 class="text-xl font-bold text-white">新着のガイド記事</h2>
                 <ul class="mt-4 divide-y divide-white/15">
                     <?php foreach ($latest_guides as $guide) : ?>
                         <li>
@@ -44,7 +44,7 @@ $latest_guides = get_posts([
                 <ul class="mt-4 list-disc space-y-3 ps-5 text-sm leading-7 text-stone-300">
                     <li>メーカーの公開仕様で比較できる違い</li>
                     <li>購入者レビューに見られる評価や気になる点</li>
-                    <li>使う場面に合わせた選び方</li>
+                    <li>筋トレや家事など、場面に合わせてあると便利なグッズ</li>
                 </ul>
             <?php endif; ?>
         </div>
