@@ -169,7 +169,7 @@ function kurashiup_render_article_analytics() {
     </form>
     <p><strong>対象期間：</strong><?php echo esc_html($start_day); ?><?php if ($start_day !== $end_day) : ?> ～ <?php echo esc_html($end_day); ?><?php endif; ?>（<?php echo esc_html(wp_timezone_string()); ?>）</p>
     <table class="widefat striped">
-        <thead><tr><th>記事</th><th>閲覧数</th><th>流入元（閲覧数）</th></tr></thead>
+        <thead><tr><th>記事</th><th>閲覧数</th><th>流入元（閲覧数）</th><th>検索表示回数</th><th>検索クリック数</th></tr></thead>
         <tbody>
         <?php if ($articles) : foreach ($articles as $article) : ?>
             <tr>
@@ -188,12 +188,14 @@ function kurashiup_render_article_analytics() {
                         —
                     <?php endif; ?>
                 </td>
+                <td title="Google Search Console連携が必要です">—</td>
+                <td title="Google Search Console連携が必要です">—</td>
             </tr>
         <?php endforeach; else : ?>
-            <tr><td colspan="3">記事がありません。</td></tr>
+            <tr><td colspan="5">記事がありません。</td></tr>
         <?php endif; ?>
         </tbody>
     </table>
-    <p class="description">計測はこの機能の公開後に始まります。ログイン中の閲覧と一般的なクローラーは除外します。Google検索の表示回数・クリック数はSearch Console連携が必要です。</p>
+    <p class="description">計測はこの機能の公開後に始まります。ログイン中の閲覧と一般的なクローラーは除外します。検索表示回数・検索クリック数はSearch Console未連携のため未取得です。連携後に取得できるようにする必要があります。</p>
     <?php
 }
