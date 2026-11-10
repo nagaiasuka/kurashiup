@@ -46,7 +46,8 @@ function kurashiup_article_analytics_source() {
     $host = preg_replace('/^www\./', '', $host);
     $site_host = strtolower((string) wp_parse_url(home_url('/'), PHP_URL_HOST));
     $site_host = preg_replace('/^www\./', '', $site_host);
-    if ($host === $site_host || str_ends_with($host, '.' . $site_host)) {
+    $site_suffix = '.' . $site_host;
+    if ($host === $site_host || (strlen($host) > strlen($site_suffix) && substr($host, -strlen($site_suffix)) === $site_suffix)) {
         return 'internal';
     }
 
