@@ -175,8 +175,11 @@ function kurashiup_render_analytics_page() {
     ]);
     ?>
     <div class="wrap">
-        <h1>KurashiUpのクリック分析</h1>
-        <p>以下はサイト内で記録しているAmazonリンクの累計クリック数です。検索結果の表示回数や記事閲覧数ではありません。</p>
+        <h1>KurashiUpの分析</h1>
+        <?php kurashiup_render_article_analytics(); ?>
+        <hr>
+        <h2>Amazonクリック（商品別・累計）</h2>
+        <p>以下はサイト内で記録しているAmazonリンクの累計クリック数です。</p>
         <table class="widefat striped">
             <thead><tr><th>商品</th><th>状態</th><th>Amazonクリック（累計）</th></tr></thead>
             <tbody>
@@ -201,14 +204,6 @@ function kurashiup_render_analytics_page() {
                 ])); ?>
             </div></div>
         <?php endif; ?>
-        <hr>
-        <h2>検索・閲覧データ</h2>
-        <ul class="ul-disc">
-            <li>Google Search Console：Google検索での表示回数・クリック数（この画面では未連携）</li>
-            <li>Google Analytics 4：サイトの閲覧数（この画面では未連携）</li>
-            <li>X：Xの投稿インプレッション（この画面では未連携）</li>
-        </ul>
-        <p>Googleのデータは連携後にSite Kitなどで、XのデータはX側の分析画面で確認してください。</p>
     </div>
     <?php
 }

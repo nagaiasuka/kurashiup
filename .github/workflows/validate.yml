@@ -1,0 +1,25 @@
+name: Validate theme
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: ['feature/article-analytics-daily-monthly', 'codex/article-search-analytics']
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: wp-content/themes/kurashiup-theme/package-lock.json
+      - name: PHP syntax
+        run: docker run --rm -v "$PWD:/app:ro" -w /app php:8.3-cli sh -c 'find wp-content/themes/kurashiup-theme tests -name "*.php" -print0 | xargs -0 -n1 php -l'
+      - name: Search Console response tests
+        run: node --test tests/search-analytics.test.cjs
+      - name: Build
+        working-directory: wp-content/themes/kurashiup-theme
+        run: |
+          npm ci
+          npm run build
