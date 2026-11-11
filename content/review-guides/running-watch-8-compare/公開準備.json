@@ -10,15 +10,14 @@
   "image_width": 1200,
   "image_height": 630,
   "information_checked_date": "2026-11-11",
-  "publication_status": "not_published",
-  "sharing_configuration": "Existing production theme emits summary_large_image and OGP for published review_guide posts with featured image. New article remains to be published and checked.",
+  "publication_status": "published",
+  "sharing_configuration": "Public HTML verified: og:image and twitter:image point to the 1200x630 featured image; twitter:card=summary_large_image. Actual rendering in X has not been checked.",
   "affiliate_links_checked": 8,
-  "pending": [
-    "WordPress access",
-    "Upload assets and replace relative asset paths in HTML with public WordPress media URLs",
-    "Set featured image and SEO description",
-    "Check rendered draft in production theme",
-    "Publish",
-    "Check anonymous article, social metadata and public image URL"
-  ]
+  "pending": [],
+  "public_url": "https://amocreo.com/guide/running-watch-8-compare/",
+  "post_id": 49,
+  "featured_media_id": 50,
+  "featured_image_url": "https://amocreo.com/wp-content/uploads/2026/11/kurashiup-running-watches-share.jpg",
+  "verified_at": "2026-11-11T23:13:08+09:00",
+  "deployment_run": "https://github.com/nagaiasuka/kurashiup/actions/runs/43035540214"
 }
