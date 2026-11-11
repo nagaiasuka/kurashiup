@@ -1,0 +1,25 @@
+const {chromium}=require('playwright');
+const path=require('path');
+const {pathToFileURL}=require('url');
+const R=__dirname;
+(async()=>{
+ const browser=await chromium.launch({executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true});
+ const page=await browser.newPage({viewport:{width:1440,height:1100},deviceScaleFactor:1});
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(pathToFileURL(path.join(R,'ランニングウォッチ8機種比較.html')).href);
+ await page.evaluate(async()=>{await document.fonts.ready;await Promise.all([...document.images].map(async i=>{i.loading='eager';await i.decode();}));});
+ await page.locator('.kw-chart').screenshot({path:path.join(R,'比較図.png')});
+ await page.screenshot({path:path.join(R,'記事プレビュー.png'),fullPage:true});
+ const check=await page.evaluate(()=>({models:document.querySelectorAll('.kw-model').length,chartLinks:document.querySelectorAll('svg a').length,images:[...document.querySelectorAll('img')].map(i=>({alt:i.alt,loaded:i.complete&&i.naturalWidth>0,w:i.naturalWidth,h:i.naturalHeight})),badAnchors:[...document.querySelectorAll('a[href^="#"]')].filter(a=>!document.getElementById(a.getAttribute('href').slice(1))).map(a=>a.getAttribute('href'))}));
+ await page.locator('svg a[href="#watch-970"]').click();
+ console.log('CLICK_HASH',await page.evaluate(()=>location.hash));
+ await page.setViewportSize({width:390,height:844});
+ await page.goto(pathToFileURL(path.join(R,'ランニングウォッチ8機種比較.html')).href);
+ await page.evaluate(async()=>{await document.fonts.ready;await Promise.all([...document.images].map(async i=>{i.loading='eager';await i.decode();}));});
+ console.log('MOBILE',await page.evaluate(()=>({viewport:innerWidth,documentWidth:document.documentElement.scrollWidth,diagramScroll:document.querySelector('.kw-chart').scrollWidth,diagramWidth:document.querySelector('.kw-chart').clientWidth})));
+ await page.screenshot({path:path.join(R,'スマホプレビュー.png'),fullPage:true});
+ await page.locator('#watch-m3').screenshot({path:path.join(R,'機種詳細プレビュー.png')});
+ if(check.models!==8||check.chartLinks!==8||check.images.length!==8||check.images.some(i=>!i.loaded)||check.badAnchors.length||errors.length)throw new Error('Article verification failed: '+JSON.stringify({check,errors}));
+ console.log(JSON.stringify({check,errors},null,2));
+ await browser.close();
+})();

@@ -1,0 +1,50 @@
+{
+  "570": {
+    "path": "assets/570.jpg",
+    "source": "https://www.garmin.co.jp/m/jp/g/products/Forerunner570_42mm_SlateBlack_OF_Front-01.jpg",
+    "mime": "image/jpeg",
+    "bytes": 27135
+  },
+  "970": {
+    "path": "assets/970.jpg",
+    "source": "https://www.garmin.co.jp/m/jp/g/products/Forerunner970_CarbonGrayBlack_OF_Front-01.jpg",
+    "mime": "image/jpeg",
+    "bytes": 28428
+  },
+  "pace4": {
+    "path": "assets/pace4.png",
+    "source": "https://static.coros.com/coros-v2/images/pace4-2025/watch/pace1.png",
+    "mime": "image/png",
+    "bytes": 177110
+  },
+  "pacepro": {
+    "path": "assets/pacepro.png",
+    "source": "https://cdn.shopify.com/s/files/1/1672/6075/files/COROS_PACE_Pro_Black1.png?v=1752056686",
+    "mime": "image/png",
+    "bytes": 163099
+  },
+  "run2": {
+    "path": "assets/run2.png",
+    "source": "https://us.suunto.com/cdn/shop/files/run2-build1_400x400.webp?v=1788248747",
+    "mime": "image/png",
+    "bytes": 86938
+  },
+  "races": {
+    "path": "assets/races.png",
+    "source": "https://us.suunto.com/cdn/shop/files/image1_6afcde1b-eeab-42ec-bafd-414bf72faaeb.png?v=1778248839&width=480",
+    "mime": "image/png",
+    "bytes": 107793
+  },
+  "race2": {
+    "path": "assets/race2.png",
+    "source": "https://us.suunto.com/cdn/shop/files/Suunto_Race2-CoralOrange-Front-CoralOrange-watchface-c40-sailfish_EN.png?v=1778250143&width=480",
+    "mime": "image/png",
+    "bytes": 109356
+  },
+  "m3": {
+    "path": "assets/m3.png",
+    "source": "https://www.polar.com/img/cms/7e34b7975f27d8c315c9073e221765e1c040a077-5000x5000-160.png",
+    "mime": "image/png",
+    "bytes": 19649
+  }
+}

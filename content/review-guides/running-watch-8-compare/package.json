@@ -1,0 +1,13 @@
+{
+  "name": "kurashiup-running-watch-guide",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "python3 build.py",
+    "share": "node share.cjs",
+    "verify": "node verify.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.65.0"
+  }
+}

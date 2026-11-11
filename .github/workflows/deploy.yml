@@ -31,6 +31,9 @@ jobs:
       - name: Install lftp
         run: sudo apt-get update && sudo apt-get install -y lftp
 
+      - name: Package approved guide release
+        run: python3 scripts/package-guide-release.py
+
       - name: Deploy theme by FTPS
         env:
           XREA_HOST: ${{ secrets.XREA_HOST }}
