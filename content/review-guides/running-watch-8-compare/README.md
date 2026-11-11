@@ -37,4 +37,4 @@ WordPressの `review_guide` として登録し、画像をメディアへアッ�
 
 Race 2の写真はCoral Orange、ユーザー指定のAmazonリンクはAll Blackのステンレス仕様。その違いは記事に記載している。
 
-記事・画像はGit管理するが、現在のGitHub Actionsは記事をWordPressへ自動登録しない。本番の投稿とアイキャッチはまだ未反映。
+今回のリリースでは、GitHub Actionsが記事・画像を梱包し、本番テーマが一度だけ投稿とアイキャッチを登録・公開する。実際の公開結果は `公開準備.json` に記録する。配信処理の詳細は `content/README.md` を参照。
