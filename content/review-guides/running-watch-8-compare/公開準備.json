@@ -1,0 +1,24 @@
+{
+  "site": "https://amocreo.com",
+  "post_type": "review_guide",
+  "title": "ランニング向けスマートウォッチ8機種を比較｜軽さ・GPS電池持ち・地図で選ぶ",
+  "slug": "running-watch-8-compare",
+  "excerpt": "ランニング向けスマートウォッチ8機種を画像付きの2軸図で比較。バンド込みの重量と高精度GPSモードの公称稼働時間、地図・練習支援の違いから用途に合う候補を探せます。",
+  "content_file": "WordPress公開用本文.html",
+  "featured_image_file": "kurashiup-running-watches-share.jpg",
+  "featured_image_alt": "ランニング向けスマートウォッチ8機種を、バンド込み重量と高精度GPSモードの公称稼働時間で整理した比較図",
+  "image_width": 1200,
+  "image_height": 630,
+  "information_checked_date": "2026-11-11",
+  "publication_status": "not_published",
+  "sharing_configuration": "Existing production theme emits summary_large_image and OGP for published review_guide posts with featured image. New article remains to be published and checked.",
+  "affiliate_links_checked": 8,
+  "pending": [
+    "WordPress access",
+    "Upload assets and replace relative asset paths in HTML with public WordPress media URLs",
+    "Set featured image and SEO description",
+    "Check rendered draft in production theme",
+    "Publish",
+    "Check anonymous article, social metadata and public image URL"
+  ]
+}
