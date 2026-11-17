@@ -7,6 +7,10 @@ on:
       - master
   workflow_dispatch:
 
+concurrency:
+  group: xrea-theme-production
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -32,7 +36,9 @@ jobs:
         run: bash scripts/install-deploy-tools.sh
 
       - name: Package approved guide release
-        run: python3 scripts/package-guide-release.py
+        run: |
+          python3 scripts/package-guide-release.py
+          python3 scripts/package-guide-updates.py
 
       - name: Deploy theme by FTPS
         env:
@@ -56,3 +62,25 @@ jobs:
             /public_html/amocreo.com/wp-content/themes/kurashiup-theme/
           bye
           EOF
+
+      - name: Verify deployed guide revisions
+        run: |
+          shopt -s nullglob
+          for manifest in wp-content/themes/kurashiup-theme/releases/guide-updates/*/manifest.json; do
+            slug="$(basename "$(dirname "$manifest")")"
+            expected="$(sha256sum "$manifest" | cut -d ' ' -f 1)"
+            applied=
+            for attempt in 1 2 3; do
+              headers="$(curl --fail --silent --show-error --location --max-time 30 \
+                --output /dev/null --dump-header - "https://amocreo.com/guide/${slug}/?guide_deploy=${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${attempt}")" || continue
+              applied="$(awk 'tolower($1) == "x-kurashiup-guide-revision:" {gsub(/\r/, "", $2); print $2}' <<< "$headers")"
+              if [[ "$applied" == "$expected" ]]; then
+                break
+              fi
+              sleep 5
+            done
+            if [[ "$applied" != "$expected" ]]; then
+              echo "Guide revision was not confirmed: $slug" >&2
+              exit 1
+            fi
+          done

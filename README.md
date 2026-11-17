@@ -40,3 +40,20 @@ npm run dev
 3. `main` へのプッシュで GitHub Actions の [Deploy theme to XREA](.github/workflows/deploy.yml) が起動します。手動実行する場合は GitHub の **Actions** で同ワークフローを開き、**Run workflow** で `main` を選びます。
 4. ワークフローは Node.js 22 でテーマをビルドし、対象の承認済み記事を梱包して、XREA のテーマディレクトリに FTPS で同期します。接続情報は GitHub Actions の Secrets `XREA_HOST`、`XREA_USER`、`XREA_PASSWORD` で設定します。
 5. Actions の実行結果を確認し、本番で変更対象のページを開いて表示と動作を確認します。記事公開を含む場合は、公開 URL とアイキャッチも確認します。
+
+### 既存のガイド記事を本番に反映する
+
+1. ローカルの WordPress 管理画面で対象ガイドを編集し、公開状態で保存します。本文に載せる画像はローカルのメディアにアップロードしてから挿入します。アイキャッチ、公開日、調査情報もここで編集できます。
+2. リポジトリのルートで対象記事を書き出します。引数は記事 URL の `/guide/` に続くスラッグです。
+
+   ```sh
+   docker compose up -d
+   python3 scripts/export-guide.py running-watch-8-compare
+   git add content/guide-updates/
+   git diff --cached --stat
+   ```
+
+3. `content/guide-updates/<スラッグ>/` の差分を確認し、作業ブランチにコミットしてプッシュします。通常の開発手順に従って PR をレビューし、`main` へマージします。
+4. GitHub Actions の **Deploy theme to XREA** を確認し、本番のガイドを開いて本文、画像、公開日、調査情報を確認します。Actions は配信後に記事 URL にアクセスし、WordPress は配信ファイルのチェックサムを確認してから同じスラッグの公開済みガイドを更新します。
+
+書き出しにはタイトル、本文、抜粋、公開日、調査情報、ローカルの本文画像とアイキャッチが含まれます。既存記事の投稿 ID、スラッグ、公開状態は維持されます。新規ガイドはローカルで公開してから、書き出し時に `--create` を付けます。配信先に記事がまだない場合、WordPress は画像・本文・調査情報を揃えて公開します。以後の改訂もローカルで編集し、再エクスポートしてからマージしてください。
