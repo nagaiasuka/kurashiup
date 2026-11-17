@@ -214,3 +214,5 @@ require_once get_template_directory() . '/inc/post-types.php';
 require_once get_template_directory() . '/inc/product-fields.php';
 require_once get_template_directory() . '/inc/taxonomies.php';
 require_once get_template_directory() . '/inc/import-api.php';
+
+require_once get_template_directory() . "/inc/guide-updates.php";
