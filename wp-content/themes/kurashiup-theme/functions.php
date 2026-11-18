@@ -205,6 +205,7 @@ add_action('admin_post_kurashiup_redirect_to_amazon', 'kurashiup_redirect_to_ama
 add_action('admin_post_nopriv_kurashiup_redirect_to_amazon', 'kurashiup_redirect_to_amazon');
 
 require_once get_template_directory() . '/inc/review-guides-analytics.php';
+require_once get_template_directory() . '/inc/review-guide-links.php';
 require_once get_template_directory() . '/inc/seo.php';
 // A partially uploaded deployment must not break page requests.
 if (is_readable(get_template_directory() . '/inc/guide-release.php')) {
