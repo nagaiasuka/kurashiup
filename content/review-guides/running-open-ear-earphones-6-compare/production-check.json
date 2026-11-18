@@ -1,0 +1,18 @@
+{
+  "verified_at": "2026-11-18T10:39:22.181498+09:00",
+  "article_url": "https://amocreo.com/guide/running-open-ear-earphones-6-compare/",
+  "twitter_card": "summary_large_image",
+  "image": "https://amocreo.com/wp-content/uploads/kurashiup-guide-git/13314ec8053d2ea9ae2d324c558f7865bec90084656357f05030b0522d47bb32.jpg",
+  "image_bytes": 85060,
+  "dimensions": [
+    1200,
+    630
+  ],
+  "image_checksum_matches_local": true,
+  "user_agent": "Twitterbot/1.0",
+  "deployment_run": "https://github.com/nagaiasuka/kurashiup/actions/runs/44217181677",
+  "x_existing_post": "https://x.com/Kurashiup25/status/2122865483427057788",
+  "x_existing_card_before_image_update": "Observed without image in X profile",
+  "x_new_image_rendering": "Not verified: browser interactions interrupted by concurrent user activity",
+  "x_post_sent": false
+}
