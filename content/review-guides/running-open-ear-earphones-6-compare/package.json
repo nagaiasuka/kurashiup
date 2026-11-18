@@ -1,0 +1,6 @@
+{
+  "name": "kurashiup-running-earphones-share",
+  "private": true,
+  "scripts": { "share": "node share.cjs" },
+  "devDependencies": { "playwright": "1.65.1" }
+}
